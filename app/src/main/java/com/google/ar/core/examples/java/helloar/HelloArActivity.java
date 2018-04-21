@@ -86,6 +86,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private final ObjectRenderer redCircle = new ObjectRenderer();
   private final ObjectRenderer blackCircle = new ObjectRenderer();
 
+  private ObjectRenderer[] paintColors = {purpleCircle, yellowCircle, cyanCircle,
+                                blueCircle, greenCircle, redCircle, blackCircle};
+
   //private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
   private final PlaneRenderer planeRenderer = new PlaneRenderer();
   private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
@@ -230,7 +233,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       pointCloudRenderer.createOnGlThread(/*context=*/ this);
       System.out.println("\nDRAWING: " + this.curModel[0]);
 
-      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0], this.curModel[1]);
+      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
       virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
 
     } catch (IOException e) {
