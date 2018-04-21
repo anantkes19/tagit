@@ -98,9 +98,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
-  private String[] curModel = {"models/sphere.obj", "models/square.png"};
+  private String[] curModel = {"drawable/Purple.png", "drawable/Yellow.png","drawable/Cyan.png",
+                               "drawable/Blue.png", "drawable/Green.png", "drawable/Red.png", "drawable/Black.png"};
 
-  private int curDrawingIdx = 0;
+  private int curDrawingIdx = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +117,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     // Set up renderer.
     surfaceView.setPreserveEGLContextOnPause(true);
     surfaceView.setEGLContextClientVersion(2);
-    surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
+    surfaceView.setEGLConfigChooser(8, 8, 8,
+                                    8, 16, 0); // Alpha used for plane blending.
     surfaceView.setRenderer(this);
     surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
@@ -250,7 +252,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
       for (int i = 0; i<this.paintColors.length; i++) {
 
-        this.paintColors[i].createOnGlThread(/*context=*/ this, this.curModel[0],this.curModel[1]);
+        this.paintColors[i].createOnGlThread(/*context=*/ this, "models/sphere.obj",this.curModel[i]);
 //        this.paintColors[i].createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
         this.paintColors[i].setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
 
