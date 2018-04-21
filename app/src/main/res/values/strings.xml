@@ -15,5 +15,8 @@
    limitations under the License.
 -->
 <resources>
-  <string name="app_name">HelloAR Java</string>
+  <string name="tag_it">HelloAR Java</string>
+  <string name="upload_graffiti">Upload Graffiti</string>
+  <string name="andy">ANDY</string>
+  <string name="paint">PAINT</string>
 </resources>
