@@ -75,9 +75,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private TapHelper tapHelper;
 
   private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-//  private final ObjectRenderer virtualObject = new ObjectRenderer();
 
-  //7 Primary Paint Colors
+  // 7 Primary Paint Colors
   private final ObjectRenderer purpleCircle = new ObjectRenderer();
   private final ObjectRenderer yellowCircle = new ObjectRenderer();
   private final ObjectRenderer cyanCircle = new ObjectRenderer();
@@ -86,10 +85,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private final ObjectRenderer redCircle = new ObjectRenderer();
   private final ObjectRenderer blackCircle = new ObjectRenderer();
 
+  // list of all ObjectRenderer instances
   private ObjectRenderer[] paintColors = { purpleCircle, yellowCircle, cyanCircle,
                                 blueCircle, greenCircle, redCircle, blackCircle };
 
-  //private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
   private final PlaneRenderer planeRenderer = new PlaneRenderer();
   private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
 
@@ -100,6 +99,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
   private String[] curModel = {"models/sphere.obj", "models/square.png"};
+
+  private int curDrawingIdx = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +189,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     surfaceView.onResume();
     displayRotationHelper.onResume();
 
-    messageSnackbarHelper.showMessage(this, "Searching for surfaces...");
   }
 
   @Override
@@ -228,16 +228,13 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     try {
+
       backgroundRenderer.createOnGlThread(/*context=*/ this);
       planeRenderer.createOnGlThread(/*context=*/ this, "models/trigrid.png");
       pointCloudRenderer.createOnGlThread(/*context=*/ this);
       System.out.println("\nDRAWING: " + this.curModel[0]);
 
-//      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
-//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
-
       this.virtObjsToThread();
-
 
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
@@ -378,12 +375,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         anchor.getPose().toMatrix(anchorMatrix, 0);
 
         // Update and draw the model and its shadow.
-        this.updateModelMatrices(scaleFactor, viewmtx, projmtx, colorCorrectionRgba);
-//        virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
-//        greenCircle.updateModelMatrix(anchorMatrix,scaleFactor);
-//        //virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
-//        virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
-        //virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba);
+        this.updateModelMatrices(scaleFactor, projmtx, viewmtx, colorCorrectionRgba);
+
       }
 
     } catch (Throwable t) {
@@ -394,44 +387,74 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 
   // update and draw each model
-  public void updateModelMatrices( float scaleFactor, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba, int curIdx ) {
+  public void updateModelMatrices( float scaleFactor, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba) {
 
-    for (ObjectRenderer virtObj : this.paintColors) {
+    try {
 
-      virtObj.updateModelMatrix(anchorMatrix, scaleFactor);
+      // update the anchor points on each object renderer
+      for (ObjectRenderer virtObj : this.paintColors) {
+        virtObj.updateModelMatrix(anchorMatrix, scaleFactor);
+      }
 
+    } catch (Throwable t) {
+      // Avoid crashing the application due to unhandled exceptions.
+      Log.e(TAG, "Exception on the OpenGL thread", t);
     }
-    this.paintColors[curIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
+
+    // draw anchor points using user's currently selected color
+    this.paintColors[this.curDrawingIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
+
   }
 
 
-  // user taps button to draw Andys
-//  public void userSelectAndy(android.view.View view) {
-//    Log.d("SELECTING", "ANDY");
-////    this.curModel[0] = "models/andy.obj";
-////    this.curModel[1] = "models/andy.png";
-//    resetVirtualObject();
-//
-//  }
-//
-//  // user taps button to paint regularly
-//  public void userSelectPaint(android.view.View view) {
-//    Log.d("SELECTING", "PAINT");
-////    this.curModel[0] = "models/sphere.obj";
-////    this.curModel[1] = "models/square.png";
-//    resetVirtualObject();
-//  }
-//
-//  //
-//  public void resetVirtualObject() {
-//    System.out.println("RESETTING V0\n");
-//    //virtualObject = new ObjectRenderer();
-//    try {
-////      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0], this.curModel[1]);
-//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
-//    } catch(IOException e) {
-//      Log.e(TAG, "Failed to read an asset file", e);
-//    }
-//  }
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawPurple() {
+    this.curDrawingIdx = 0;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawYellow() {
+    this.curDrawingIdx = 1;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawCyan() {
+    this.curDrawingIdx = 2;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawBlue() {
+    this.curDrawingIdx = 3;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawGreen() {
+    this.curDrawingIdx = 4;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawRed() {
+    this.curDrawingIdx = 5;
+  }
+
+  // update drawing index of this.paintColors
+  // bound to user button tap
+  public void drawBlack() {
+    this.curDrawingIdx = 6;
+  }
+
+  // delete last 3 points drawn on the screen
+  public void undrawLastPoints() {
+    for (int i = 1; i < 4; i++) {
+      this.anchors.remove(this.anchors.size()-i);
+    }
+  }
+
 
 }
