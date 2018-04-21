@@ -96,7 +96,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
-  private String[] curModel = {"models/sphere.obj", "models/square.png"};
+  private String[][] curModel = {{"models/sphere.obj", "models/square.png"}};
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
