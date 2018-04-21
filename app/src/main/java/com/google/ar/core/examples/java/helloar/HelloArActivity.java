@@ -75,7 +75,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private TapHelper tapHelper;
 
   private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-  private final ObjectRenderer virtualObject = new ObjectRenderer();
+//  private final ObjectRenderer virtualObject = new ObjectRenderer();
 
   //7 Primary Paint Colors
   private final ObjectRenderer purpleCircle = new ObjectRenderer();
@@ -86,8 +86,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private final ObjectRenderer redCircle = new ObjectRenderer();
   private final ObjectRenderer blackCircle = new ObjectRenderer();
 
-  private ObjectRenderer[] paintColors = {purpleCircle, yellowCircle, cyanCircle,
-                                blueCircle, greenCircle, redCircle, blackCircle};
+  private ObjectRenderer[] paintColors = { purpleCircle, yellowCircle, cyanCircle,
+                                blueCircle, greenCircle, redCircle, blackCircle };
 
   //private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
   private final PlaneRenderer planeRenderer = new PlaneRenderer();
@@ -99,7 +99,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
-  private String[][] curModel = {{"models/sphere.obj", "models/square.png"}};
+  private String[] curModel = {"models/sphere.obj", "models/square.png"};
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -233,8 +233,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       pointCloudRenderer.createOnGlThread(/*context=*/ this);
       System.out.println("\nDRAWING: " + this.curModel[0]);
 
-      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
-      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+//      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
+//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+
+      this.virtObjsToThread();
+
 
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
@@ -243,6 +246,22 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   }
 
+  // put each virtual color object on the thread
+  public void virtObjsToThread() {
+
+    try {
+
+      for (int i = 0; i<this.paintColors.length; i++) {
+
+        this.paintColors[i].createOnGlThread(/*context=*/ this, this.curModel[0],this.curModel[1]);
+//        this.paintColors[i].createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
+        this.paintColors[i].setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+
+      }
+    } catch (IOException e) {
+      Log.e(TAG, "Failed to read an asset file", e);
+    }
+  }
 
   @Override
   public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -359,10 +378,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         anchor.getPose().toMatrix(anchorMatrix, 0);
 
         // Update and draw the model and its shadow.
-        virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
-        greenCircle.updateModelMatrix(anchorMatrix,scaleFactor);
-        //virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
-        virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
+        this.updateModelMatrices(scaleFactor, viewmtx, projmtx, colorCorrectionRgba);
+//        virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
+//        greenCircle.updateModelMatrix(anchorMatrix,scaleFactor);
+//        //virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
+//        virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
         //virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba);
       }
 
@@ -371,36 +391,47 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       Log.e(TAG, "Exception on the OpenGL thread", t);
     }
   }
-  public void updateDrawableModelMatrix(anchorMatrix, scaleFactor) {
-    virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
-  }
-  // user taps button to draw Andys
-  public void userSelectAndy(android.view.View view) {
-    Log.d("SELECTING", "ANDY");
-    this.curModel[0] = "models/andy.obj";
-    this.curModel[1] = "models/andy.png";
-    resetVirtualObject();
 
-  }
 
-  // user taps button to paint regularly
-  public void userSelectPaint(android.view.View view) {
-    Log.d("SELECTING", "PAINT");
-    this.curModel[0] = "models/sphere.obj";
-    this.curModel[1] = "models/square.png";
-    resetVirtualObject();
-  }
+  // update and draw each model
+  public void updateModelMatrices( float scaleFactor, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba, int curIdx ) {
 
-  //
-  public void resetVirtualObject() {
-    System.out.println("RESETTING V0\n");
-    //virtualObject = new ObjectRenderer();
-    try {
-      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0], this.curModel[1]);
-      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
-    } catch(IOException e) {
-      Log.e(TAG, "Failed to read an asset file", e);
+    for (ObjectRenderer virtObj : this.paintColors) {
+
+      virtObj.updateModelMatrix(anchorMatrix, scaleFactor);
+
     }
+    this.paintColors[curIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
   }
+
+
+  // user taps button to draw Andys
+//  public void userSelectAndy(android.view.View view) {
+//    Log.d("SELECTING", "ANDY");
+////    this.curModel[0] = "models/andy.obj";
+////    this.curModel[1] = "models/andy.png";
+//    resetVirtualObject();
+//
+//  }
+//
+//  // user taps button to paint regularly
+//  public void userSelectPaint(android.view.View view) {
+//    Log.d("SELECTING", "PAINT");
+////    this.curModel[0] = "models/sphere.obj";
+////    this.curModel[1] = "models/square.png";
+//    resetVirtualObject();
+//  }
+//
+//  //
+//  public void resetVirtualObject() {
+//    System.out.println("RESETTING V0\n");
+//    //virtualObject = new ObjectRenderer();
+//    try {
+////      virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0], this.curModel[1]);
+//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+//    } catch(IOException e) {
+//      Log.e(TAG, "Failed to read an asset file", e);
+//    }
+//  }
 
 }
