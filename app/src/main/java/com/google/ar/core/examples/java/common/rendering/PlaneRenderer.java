@@ -70,8 +70,8 @@ public class PlaneRenderer {
   // Using the "signed distance field" approach to render sharp lines and circles.
   // {dotThreshold, lineThreshold, lineFadeSpeed, occlusionScale}
   // dotThreshold/lineThreshold: red/green intensity above which dots/lines are present
-  // lineFadeShrink:  lines will fade in between alpha = 1-(1/lineFadeShrink) and 1.0
-  // occlusionShrink: occluded planes will fade out between alpha = 0 and 1/occlusionShrink
+  // lineFadeShrink:  lines will fadeIn in between alpha = 1-(1/lineFadeShrink) and 1.0
+  // occlusionShrink: occluded planes will fadeIn out between alpha = 0 and 1/occlusionShrink
   private static final float[] GRID_CONTROL = {0.2f, 0.4f, 2.0f, 1.5f};
 
   private int planeProgram;

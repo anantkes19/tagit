@@ -19,4 +19,6 @@
   <string name="upload_graffiti">Upload Graffiti</string>
   <string name="andy">ANDY</string>
   <string name="paint">PAINT</string>
+    <string name="undo_button">Undo Button</string>
+  <string name="select_paints">Select Paints</string>
 </resources>
