@@ -98,8 +98,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
-  private String[] curModel = {"drawable/Purple.png", "drawable/Yellow.png","drawable/Cyan.png",
-                               "drawable/Blue.png", "drawable/Green.png", "drawable/Red.png", "drawable/Black.png"};
+//  private String[] curModel = {"drawable/Purple.png", "drawable/Yellow.png","drawable/Cyan.png",
+//                               "drawable/Blue.png", "drawable/Green.png", "drawable/Red.png", "drawable/Black.png"};
+  private String[] curModel = {"models/purpleSquare.png", "models/yellowSquare.png", "models/cyanSquare.png",
+                            "models/greenSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
 
   private int curDrawingIdx = 1;
 
