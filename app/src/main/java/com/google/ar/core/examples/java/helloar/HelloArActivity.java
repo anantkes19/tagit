@@ -75,9 +75,18 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private TapHelper tapHelper;
 
   private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-  private ObjectRenderer virtualObject = new ObjectRenderer();
-  private final ObjectRenderer virtualCircle = new ObjectRenderer();
-  private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
+  private final ObjectRenderer virtualObject = new ObjectRenderer();
+
+  //7 Primary Paint Colors
+  private final ObjectRenderer purpleCircle = new ObjectRenderer();
+  private final ObjectRenderer yellowCircle = new ObjectRenderer();
+  private final ObjectRenderer cyanCircle = new ObjectRenderer();
+  private final ObjectRenderer blueCircle = new ObjectRenderer();
+  private final ObjectRenderer greenCircle = new ObjectRenderer();
+  private final ObjectRenderer redCircle = new ObjectRenderer();
+  private final ObjectRenderer blackCircle = new ObjectRenderer();
+
+  //private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
   private final PlaneRenderer planeRenderer = new PlaneRenderer();
   private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
 
@@ -348,6 +357,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         // Update and draw the model and its shadow.
         virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
+        greenCircle.updateModelMatrix(anchorMatrix,scaleFactor);
         //virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
         virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
         //virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba);
@@ -358,7 +368,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       Log.e(TAG, "Exception on the OpenGL thread", t);
     }
   }
-
+  public void updateDrawableModelMatrix(anchorMatrix, scaleFactor) {
+    virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
+  }
   // user taps button to draw Andys
   public void userSelectAndy(android.view.View view) {
     Log.d("SELECTING", "ANDY");
@@ -379,7 +391,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   //
   public void resetVirtualObject() {
     System.out.println("RESETTING V0\n");
-    virtualObject = new ObjectRenderer();
+    //virtualObject = new ObjectRenderer();
     try {
       virtualObject.createOnGlThread(/*context=*/ this, this.curModel[0], this.curModel[1]);
       virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
