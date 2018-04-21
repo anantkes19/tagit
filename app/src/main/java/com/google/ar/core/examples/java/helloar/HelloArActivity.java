@@ -413,48 +413,48 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawPurple() {
+  public void drawPurple(android.view.View view) {
     this.curDrawingIdx = 0;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawYellow() {
+  public void drawYellow(android.view.View view) {
     this.curDrawingIdx = 1;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawCyan() {
+  public void drawCyan(android.view.View view) {
     this.curDrawingIdx = 2;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawBlue() {
+  public void drawBlue(android.view.View view) {
     this.curDrawingIdx = 3;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawGreen() {
+  public void drawGreen(android.view.View view) {
     this.curDrawingIdx = 4;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawRed() {
+  public void drawRed(android.view.View view) {
     this.curDrawingIdx = 5;
   }
 
   // update drawing index of this.paintColors
   // bound to user button tap
-  public void drawBlack() {
+  public void drawBlack(android.view.View view) {
     this.curDrawingIdx = 6;
   }
 
   // delete last 3 points drawn on the screen
-  public void undrawLastPoints() {
+  public void undrawLastPoints(android.view.View view) {
     for (int i = 1; i < 4; i++) {
       this.anchors.remove(this.anchors.size()-i);
     }
