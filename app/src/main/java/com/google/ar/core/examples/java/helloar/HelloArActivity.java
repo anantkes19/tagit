@@ -484,7 +484,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   public void userStartPaint(android.view.View view) {
 
     //view.startAnimation(pulse);
-    System.out.println("Colleen lied\n");
+    //System.out.println("Colleen lied\n");
+    view.setVisibility(View.GONE);
+
     final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
     undoButton.setVisibility(View.VISIBLE);
 
@@ -494,31 +496,56 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     final Button uploadButton = (Button) findViewById(R.id.uploadButton);
     uploadButton.setVisibility(View.VISIBLE);
 
+    final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
+    backButton.setVisibility(View.VISIBLE);
+
+  }
+
+  // Exit draw mode
+  public void userStopPaint(android.view.View view) {
+
+    //view.startAnimation(pulse);
+    //System.out.println("Colleen told the truth\n");
+    final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonPaint);
+    startPaint.setVisibility(View.VISIBLE);
+
+    final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
+    undoButton.setVisibility(View.GONE);
+
+    final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
+    buttonPaintCan.setVisibility(View.GONE);
+
+    final Button uploadButton = (Button) findViewById(R.id.uploadButton);
+    uploadButton.setVisibility(View.GONE);
+
+    final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
+    backButton.setVisibility(View.GONE);
+
   }
 
   //Hide the selected paints
   public void resetSelectPaint(android.view.View view) {
     //view.startAnimation(pulse);
     final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
-    redButton.setVisibility(View.INVISIBLE);
+    redButton.setVisibility(View.GONE);
 
     final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
-    blueButton.setVisibility(View.INVISIBLE);
+    blueButton.setVisibility(View.GONE);
 
     final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
-    blackButton.setVisibility(View.INVISIBLE);
+    blackButton.setVisibility(View.GONE);
 
     final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
-    yellowButton.setVisibility(View.INVISIBLE);
+    yellowButton.setVisibility(View.GONE);
 
     final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
-    cyanButton.setVisibility(View.INVISIBLE);
+    cyanButton.setVisibility(View.GONE);
 
     final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
-    purpleButton.setVisibility(View.INVISIBLE);
+    purpleButton.setVisibility(View.GONE);
 
     final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
-    greenButton.setVisibility(View.INVISIBLE);
+    greenButton.setVisibility(View.GONE);
   }
 
   public void userSelectPaint(android.view.View view) {

@@ -60,7 +60,7 @@
         />
     <ImageButton
         android:id="@+id/buttonStopPaint"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="16dp"
@@ -76,7 +76,7 @@
 
     <ImageButton
         android:id="@+id/undoButton"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="77dp"
         android:layout_height="65dp"
         android:layout_marginBottom="8dp"
@@ -89,7 +89,7 @@
 
     <Button
         android:id="@+id/uploadButton"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="169dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -111,7 +111,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawBlue"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/blue"
           android:layout_alignParentRight="true"
           android:layout_alignParentTop="true"
@@ -124,7 +124,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawRed"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/red"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonBlue"
@@ -137,7 +137,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawGreen"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/green"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonRed"
@@ -150,7 +150,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawYellow"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/yellow"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonGreen"
@@ -163,7 +163,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawCyan"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/cyan"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonYellow"
@@ -176,7 +176,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="16dp"
           android:onClick="drawPurple"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/purple"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonCyan"
@@ -189,7 +189,7 @@
           android:layout_marginEnd="30dp"
           android:layout_marginStart="8dp"
           android:onClick="drawBlack"
-          android:visibility="invisible"
+          android:visibility="gone"
           android:background="@drawable/black"
           android:layout_alignParentRight="true"
           android:layout_below="@id/buttonPurple"
@@ -200,7 +200,7 @@
 
     <ImageButton
         android:id="@+id/buttonPaintCan"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="8dp"
