@@ -183,7 +183,7 @@
           android:contentDescription="@string/select_paints"
           />
       <ImageButton
-          android:id="@+id/buttonblack"
+          android:id="@+id/buttonBlack"
           android:layout_width="@dimen/colorSize"
           android:layout_height="@dimen/colorSize"
           android:layout_marginEnd="30dp"
