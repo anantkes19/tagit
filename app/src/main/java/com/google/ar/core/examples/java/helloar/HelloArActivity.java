@@ -19,15 +19,18 @@ package com.google.ar.core.examples.java.helloar;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.HapticFeedbackConstants;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.content.Context;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
@@ -110,6 +113,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                             "models/greenSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
 
   private int curDrawingIdx = 1;
+  private boolean drawing = false;
 
   //Animations for style
   //final Animation pulse = AnimationUtils.loadAnimation(this,R.anim.pulse);
@@ -314,6 +318,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
           Trackable trackable = hit.getTrackable();
           System.out.println("Location getDist() : " + hit.getDistance() );
           System.out.println("Location getPos() : " + hit.getHitPose() );
+
+          // haptic feedback
+
           // Creates an anchor if a plane or an oriented point was hit.
           if ((trackable instanceof Plane && ((Plane) trackable).isPoseInPolygon(hit.getHitPose()))
               || (trackable instanceof Point
@@ -381,6 +388,13 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       planeRenderer.drawPlanes(
           session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
 
+      // haptic feedback when a new plane is found
+      // Get instance of Vibrator from current Context
+      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+      // Vibrate for 400 milliseconds
+      v.vibrate(400);
+
       // Visualize anchors created by touch.
       float scaleFactor = 0.01f;
       for (Anchor anchor : anchors) {
@@ -419,8 +433,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     }
 
     // draw anchor points using user's currently selected color
-    this.paintColors[this.curDrawingIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
-
+    if (drawing) {
+        this.paintColors[this.curDrawingIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
+    }
   }
 
 
@@ -489,6 +504,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     //view.startAnimation(pulse);
     //System.out.println("Colleen lied\n");
+    drawing = true; // allow points to be drawn
+
     view.setVisibility(View.GONE);
 
     final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
@@ -510,6 +527,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     //view.startAnimation(pulse);
     //System.out.println("Colleen told the truth\n");
+    drawing = false;    // prevent points from being drawn
+
     final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
     startPaint.setVisibility(View.VISIBLE);
 
