@@ -16,9 +16,11 @@
 
 package com.google.ar.core.examples.java.helloar;
 
+import android.content.DialogInterface;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -503,23 +505,44 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   // Exit draw mode
   public void userStopPaint(android.view.View view) {
-
     //view.startAnimation(pulse);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Confirm");
+    builder.setMessage("Are you sure?");
+
+    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        //delete the points
+
+        final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
+        startPaint.setVisibility(View.VISIBLE);
+
+        final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
+        undoButton.setVisibility(View.GONE);
+
+        final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
+        buttonPaintCan.setVisibility(View.GONE);
+
+        final Button uploadButton = (Button) findViewById(R.id.uploadButton);
+        uploadButton.setVisibility(View.GONE);
+
+        final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
+        backButton.setVisibility(View.GONE);
+
+        dialog.dismiss();
+      }
+    });
+
+    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+
+
     //System.out.println("Colleen told the truth\n");
-    final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
-    startPaint.setVisibility(View.VISIBLE);
-
-    final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
-    undoButton.setVisibility(View.GONE);
-
-    final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
-    buttonPaintCan.setVisibility(View.GONE);
-
-    final Button uploadButton = (Button) findViewById(R.id.uploadButton);
-    uploadButton.setVisibility(View.GONE);
-
-    final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
-    backButton.setVisibility(View.GONE);
 
   }
 
