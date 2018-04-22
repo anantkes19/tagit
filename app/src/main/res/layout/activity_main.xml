@@ -37,6 +37,7 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent">
 
+    //title
     <ImageView android:id="@+id/tagit"
         android:src="@drawable/title"
         android:layout_height="200dp"
@@ -45,8 +46,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
+    //start drawing button
     <ImageButton
-        android:id="@+id/buttonPaint"
+        android:id="@+id/buttonStartPaint"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
@@ -58,6 +60,8 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/select_paints"
         />
+
+    //stop drawing button
     <ImageButton
         android:id="@+id/buttonStopPaint"
         android:visibility="gone"
@@ -73,7 +77,7 @@
         android:contentDescription="@string/select_paints"
         />
 
-
+    //undo button
     <ImageButton
         android:id="@+id/undoButton"
         android:visibility="gone"
@@ -87,6 +91,7 @@
         android:contentDescription="@string/undo_button"
         android:background="@drawable/undo"/>
 
+    //upload button
     <Button
         android:id="@+id/uploadButton"
         android:visibility="gone"
@@ -197,7 +202,7 @@
           />
 
     </RelativeLayout>
-
+    //change pen color/style button
     <ImageButton
         android:id="@+id/buttonPaintCan"
         android:visibility="gone"

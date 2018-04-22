@@ -506,7 +506,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     //view.startAnimation(pulse);
     //System.out.println("Colleen told the truth\n");
-    final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonPaint);
+    final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
     startPaint.setVisibility(View.VISIBLE);
 
     final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
@@ -548,6 +548,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     greenButton.setVisibility(View.GONE);
   }
 
+  // makes color buttons visible
   public void userSelectPaint(android.view.View view) {
 
     //view.startAnimation(pulse);
