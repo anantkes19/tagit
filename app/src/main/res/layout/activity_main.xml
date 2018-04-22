@@ -46,20 +46,31 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
+    //hamburger menu
+    <ImageButton
+        android:id="@+id/hamburgerButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/dots"
+        android:onClick="hamburger"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
     //start drawing button
+
     <ImageButton
         android:id="@+id/buttonStartPaint"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        android:onClick="userStartPaint"
-        android:background="@drawable/spray"
+        android:layout_height="64dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/spray"
         android:contentDescription="@string/select_paints"
-        />
+        android:onClick="userStartPaint" />
 
     //stop drawing button
     <ImageButton
@@ -67,7 +78,7 @@
         android:visibility="gone"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
         android:onClick="userStopPaint"
@@ -89,20 +100,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:contentDescription="@string/undo_button"
-        android:background="@drawable/xmark"/>
+        android:background="@drawable/undo"/>
 
     //upload button
     <Button
         android:id="@+id/uploadButton"
         android:visibility="gone"
         android:layout_width="169dp"
-        android:layout_height="50dp"
+        android:layout_height="65dp"
         android:layout_marginBottom="8dp"
         android:elevation="0dp"
         android:onClick="uploadDrawing"
         android:text="@string/upload_graffiti"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        style = "@style/Widget.AppCompat.Button.Colored"
+        android:backgroundTint="#23a0ff"
         />
     <RelativeLayout
         android:id="@+id/RelativeLayout02"
