@@ -509,7 +509,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_purple);
+    btn.setBackgroundResource(R.drawable.spray_purple);
   }
 
 
@@ -529,7 +529,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_yellow);
+    btn.setBackgroundResource(R.drawable.spray_yellow);
   }
 
 
@@ -548,7 +548,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_cyan);
+    btn.setBackgroundResource(R.drawable.spray_cyan);
   }
 
 
@@ -567,7 +567,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_blue);
+    btn.setBackgroundResource(R.drawable.spray_blue);
   }
 
 
@@ -586,7 +586,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_green);
+    btn.setBackgroundResource(R.drawable.spray_green);
   }
 
 
@@ -606,7 +606,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_red);
+    btn.setBackgroundResource(R.drawable.spray_red);
 
   }
 
@@ -627,7 +627,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setImageResource(R.drawable.spray_black);
+    btn.setBackgroundResource(R.drawable.spray_black);
   }
 
 
@@ -646,6 +646,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
           Log.e(TAG, "Index out of bounds: ", e);
       }
     }
+  }
+
+  //hamburger
+  public void hamburger(android.view.View view) {
+    System.out.println("HAMBURGER!!!!!");
   }
 
   // enter draw mode
@@ -670,19 +675,21 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   }
 
-    // Exit draw mode
+    // Exit draw mode w/ are you sure button
     public void userStopPaint(android.view.View view) {
         //view.startAnimation(pulse);
+
+      //build dialog builder, set the title and message
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm");
         builder.setMessage("Are you sure?");
 
+        //sets the yes button
     //view.startAnimation(pulse);
     //System.out.println("Colleen told the truth\n");
     drawing = false;    // prevent points from being drawn
 
-    final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
-    startPaint.setVisibility(View.VISIBLE);
+
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -703,26 +710,26 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
                 backButton.setVisibility(View.GONE);
 
-                while (anchors.size() != 0) {
-                    anchors.get(0).detach();
-                    anchors.remove(0);
-                }
+                resetSelectPaint(buttonPaintCan);
 
+                while (anchors.size() != 0) {
+                  anchors.get(0).detach();
+                  anchors.remove(0);
+                }
                 dialog.dismiss();
             }
         });
-
+        //sets the no button
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
+        //builds the dialog
         AlertDialog alert = builder.create();
         alert.show();
         //System.out.println("Colleen told the truth\n");
-
     }
 
 
