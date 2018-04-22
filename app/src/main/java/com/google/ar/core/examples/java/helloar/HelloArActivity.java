@@ -478,7 +478,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // delete last 3 points drawn on the screen
   public void undrawLastPoints(android.view.View view) {
     for (int i = 1; i < 4; i++) {
-      this.anchors.remove(this.anchors.size()-i);
+      try {
+        this.anchors.remove(this.anchors.size() - i);
+      } catch (IndexOutOfBoundsException e) {
+          Log.e(TAG, "Index out of bounds: ", e);
+      }
     }
   }
 
