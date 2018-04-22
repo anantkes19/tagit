@@ -16,14 +16,17 @@
 
 package com.google.ar.core.examples.java.helloar;
 
+import android.content.DialogInterface;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.media.MediaPlayer;
 import android.view.HapticFeedbackConstants;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -107,10 +110,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
-//  private String[] curModel = {"drawable/Purple.png", "drawable/Yellow.png","drawable/Cyan.png",
-//                               "drawable/Blue.png", "drawable/Green.png", "drawable/Red.png", "drawable/Black.png"};
   private String[] curModel = {"models/purpleSquare.png", "models/yellowSquare.png", "models/cyanSquare.png",
-                            "models/greenSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
+                            "models/blueSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
 
   private int curDrawingIdx = 1;
   private boolean drawing = false;
@@ -329,7 +330,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
             // Cap the number of objects created. This avoids overloading both the
             // rendering system and ARCore.
-            if (anchors.size() >= 200) {
+            if (anchors.size() >= 500) {
               anchors.get(0).detach();
               anchors.remove(0);
             }
@@ -442,50 +443,145 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawPurple(android.view.View view) {
+
     this.curDrawingIdx = 0;
-    resetSelectPaint(view);
+    setupPurple(view);
   }
+
+  // helper func
+  public void setupPurple(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_purple);
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawYellow(android.view.View view) {
+
     this.curDrawingIdx = 1;
-    resetSelectPaint(view);
+    setupYellow(view);
   }
+
+  // helper func
+  public void setupYellow(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_yellow);
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawCyan(android.view.View view) {
     this.curDrawingIdx = 2;
-    resetSelectPaint(view);
+    setupCyan(view);
   }
+
+  // helper func
+  public void setupCyan(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_cyan);
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawBlue(android.view.View view) {
     this.curDrawingIdx = 3;
-    resetSelectPaint(view);
+    setupBlue(view);
   }
+
+  // helper func
+  public void setupBlue(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_blue);
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawGreen(android.view.View view) {
     this.curDrawingIdx = 4;
-    resetSelectPaint(view);
+    setupGreen(view);
   }
+
+  // helper func
+  public void setupGreen(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_green);
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawRed(android.view.View view) {
+
     this.curDrawingIdx = 5;
-    resetSelectPaint(view);
+    setupRed(view);
   }
+
+  // helper func
+  public void setupRed(android.view.View view) {
+
+    resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_red);
+
+  }
+
 
   // update drawing index of this.paintColors
   // bound to user button tap
   public void drawBlack(android.view.View view) {
+
     this.curDrawingIdx = 6;
+    setupBlack(view);
+  }
+
+  // helper func
+  public void setupBlack(android.view.View view) {
+
     resetSelectPaint(view);
+    playCanSound();
+
+    // change spray can image to current color
+    ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
+    btn.setImageResource(R.drawable.spray_black);
+  }
+
+
+  // can shaking sound played when a new "can" (color) is selected
+  public void playCanSound() {
+    MediaPlayer mp = MediaPlayer.create(this, R.raw.shake_can);
+    mp.start();
   }
 
   // delete last 3 points drawn on the screen
@@ -522,8 +618,12 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   }
 
-  // Exit draw mode
-  public void userStopPaint(android.view.View view) {
+    // Exit draw mode
+    public void userStopPaint(android.view.View view) {
+        //view.startAnimation(pulse);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm");
+        builder.setMessage("Are you sure?");
 
     //view.startAnimation(pulse);
     //System.out.println("Colleen told the truth\n");
@@ -531,72 +631,101 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
     startPaint.setVisibility(View.VISIBLE);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //delete the points
 
-    final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
-    undoButton.setVisibility(View.GONE);
+                final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
+                startPaint.setVisibility(View.VISIBLE);
 
-    final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
-    buttonPaintCan.setVisibility(View.GONE);
+                final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
+                undoButton.setVisibility(View.GONE);
 
-    final Button uploadButton = (Button) findViewById(R.id.uploadButton);
-    uploadButton.setVisibility(View.GONE);
+                final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
+                buttonPaintCan.setVisibility(View.GONE);
 
-    final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
-    backButton.setVisibility(View.GONE);
+                final Button uploadButton = (Button) findViewById(R.id.uploadButton);
+                uploadButton.setVisibility(View.GONE);
+
+                final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
+                backButton.setVisibility(View.GONE);
+
+                while (anchors.size() != 0) {
+                    anchors.get(0).detach();
+                    anchors.remove(0);
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+        //System.out.println("Colleen told the truth\n");
+
+    }
+
+
+  // makes color buttons visible
+  public void userSelectPaint(android.view.View view) {
+
+    //view.startAnimation(pulse);
+
+    final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
+    redButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
+    blueButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
+    blackButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
+    yellowButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
+    cyanButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
+    purpleButton.setVisibility(View.VISIBLE);
+//
+    final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
+    greenButton.setVisibility(View.VISIBLE);
 
   }
 
   //Hide the selected paints
   public void resetSelectPaint(android.view.View view) {
     //view.startAnimation(pulse);
+
     final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
     redButton.setVisibility(View.GONE);
-
+//
     final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
     blueButton.setVisibility(View.GONE);
-
+//
     final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
     blackButton.setVisibility(View.GONE);
-
+//
     final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
     yellowButton.setVisibility(View.GONE);
-
+//
     final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
     cyanButton.setVisibility(View.GONE);
-
+//
     final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
     purpleButton.setVisibility(View.GONE);
-
+//
     final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
     greenButton.setVisibility(View.GONE);
-  }
-
-  // makes color buttons visible
-  public void userSelectPaint(android.view.View view) {
-
-    //view.startAnimation(pulse);
-    final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
-    redButton.setVisibility(View.VISIBLE);
-
-    final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
-    blueButton.setVisibility(View.VISIBLE);
-
-    final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
-    blackButton.setVisibility(View.VISIBLE);
-
-    final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
-    yellowButton.setVisibility(View.VISIBLE);
-
-    final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
-    cyanButton.setVisibility(View.VISIBLE);
-
-    final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
-    purpleButton.setVisibility(View.VISIBLE);
-
-    final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
-    greenButton.setVisibility(View.VISIBLE);
-
-
   }
 
 
