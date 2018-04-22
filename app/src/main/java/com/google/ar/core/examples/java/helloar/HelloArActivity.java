@@ -18,13 +18,12 @@ package com.google.ar.core.examples.java.helloar;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.Point;
 import com.google.ar.core.Point.OrientationMode;
 import com.google.ar.core.PointCloud;
+import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
@@ -47,7 +47,6 @@ import com.google.ar.core.examples.java.common.helpers.SnackbarHelper;
 import com.google.ar.core.examples.java.common.helpers.TapHelper;
 import com.google.ar.core.examples.java.common.rendering.BackgroundRenderer;
 import com.google.ar.core.examples.java.common.rendering.ObjectRenderer;
-import com.google.ar.core.examples.java.common.rendering.ObjectRenderer.BlendMode;
 import com.google.ar.core.examples.java.common.rendering.PlaneRenderer;
 import com.google.ar.core.examples.java.common.rendering.PointCloudRenderer;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
@@ -56,8 +55,21 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -67,6 +79,8 @@ import javax.microedition.khronos.opengles.GL10;
  * plane to place a 3d model of the Android robot.
  */
 public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.Renderer {
+
+
   private static final String TAG = HelloArActivity.class.getSimpleName();
 
   // Rendering. The Renderers are created here, and initialized when the GL surface is created.
@@ -104,10 +118,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
+
 //  private String[] curModel = {"drawable/Purple.png", "drawable/Yellow.png","drawable/Cyan.png",
 //                               "drawable/Blue.png", "drawable/Green.png", "drawable/Red.png", "drawable/Black.png"};
   private String[] curModel = {"models/purpleSquare.png", "models/yellowSquare.png", "models/cyanSquare.png",
-                            "models/greenSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
+                            "models/blueSquare.png", "models/greenSquare.png", "models/redSquare.png", "models/blackSquare.png" };
 
   private int curDrawingIdx = 1;
 
@@ -330,6 +345,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // space. This anchor is created on the Plane to place the 3D model
             // in the correct position relative both to the world and to the plane.
             anchors.add(hit.createAnchor());
+
             break;
           }
         }
@@ -574,6 +590,166 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     greenButton.setVisibility(View.VISIBLE);
 
 
+  }
+/*
+  public JSONObject getJSONObject(Pose pose) {
+    JSONObject newJSONObject
+    return newJSONObject;
+  }*/
+
+  public void uploadDrawing(android.view.View view) {
+    System.out.println("Uploading Drawing to server!");
+
+    CallAPI dataSender = new CallAPI();
+    JSONArray anchorJSON = new JSONArray();
+
+    //Reduce points
+    System.out.println("Original: " + anchors.size());
+    List<Anchor> reducedAnchors = rdpReduce(anchors, 0.1);
+    System.out.println("Reduced: " + reducedAnchors.size());
+
+    //Convert to json
+    for (Anchor singleObject : reducedAnchors) {
+      anchorJSON.put(singleObject.getPose());
+    }
+
+    //reducedAnchors.forEach(singleObject -> anchorJSON.put(singleObject.getPose())); RIP Android studio old java
+
+    String jsonString = anchorJSON.toString();
+    //Send points
+    dataSender.execute("http://137.146.121.108:8080/_tagit/sendGraffiti",jsonString);
+            //.doInBackground("https://hackcolbyclan.appspot.com/_tagit/sendGraffiti",jsonString);
+  }
+
+  public class CallAPI extends AsyncTask<String, String, String> {
+
+    public CallAPI(){
+      //set context variables if required
+    }
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+
+    @Override
+    protected String doInBackground(String... params) {
+
+      String urlString = params[0]; // URL to call
+
+      String data = params[1]; //data to post
+
+      OutputStream out = null;
+      try {
+
+        URL url = new URL(urlString);
+        System.out.println("Trying to connect!");
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("POST");
+        //urlConnection.setRequestProperty("Graffiti",data);
+        urlConnection.setDoOutput(true);
+        urlConnection.setRequestProperty("Accept","application/json");
+        //conn.setDoOutput(true);
+        urlConnection.setDoInput(true);
+
+        DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
+
+        os.writeBytes(data);
+
+        os.flush();
+        os.close();
+
+        Log.i("STATUS", String.valueOf(urlConnection.getResponseCode()));
+        Log.i("MSG" , urlConnection.getResponseMessage());
+
+        urlConnection.disconnect();
+
+        //OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+        /*writeStream(outputPost);
+        outputPost.flush();
+        outputPost.close();*/
+
+        /*out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+        BufferedWriter writer = new BufferedWriter (new OutputStreamWriter(out, "UTF-8"));
+
+        writer.write(data);
+
+        writer.flush();
+
+        writer.close();
+
+        out.close();
+
+        urlConnection.connect();*/
+
+        System.out.println("WE CONNECTED");
+
+
+      } catch (Exception e) {
+        System.out.println("Error occured in Sending Data");
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        System.out.println(e.getClass());
+
+
+      }
+
+      return urlString;
+    }
+  }
+
+  public static double distancePtToLine(Anchor p0, Anchor p1, Anchor p2) {
+    double x0 = p0.getPose().tx();
+    double y0 = p0.getPose().ty();
+    double z0 = p0.getPose().tz();
+
+    double x1 = p1.getPose().tx();
+    double y1 = p1.getPose().ty();
+    double z1 = p1.getPose().tz();
+
+    double x2 = p2.getPose().tx();
+    double y2 = p2.getPose().ty();
+    double z2 = p2.getPose().tz();
+
+
+    double xc = (y0 - y1)*(z0 - z2) - (z0 - z1)*(y0 - y2);
+    double yc = (z0 - z1)*(x0 - x2) - (x0 - x1)*(z0 - z2);
+    double zc = (x0 - x1)*(y0 - y2) - (y0 - y1)*(x0 - x2);
+    double numer = Math.sqrt(xc*xc + yc*yc + zc*zc);
+
+    double denom = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1));
+
+    return numer/denom;
+}
+
+  public static List<Anchor> rdpReduce(List<Anchor> points, double epsilon) {
+    double dmax = 0;
+    int indexMax = 0;
+    int end = points.size();
+    for (int i=1; i<end-1; i++){
+      double d = distancePtToLine(points.get(i), points.get(0), points.get(end-1));
+      if (d > dmax){
+        indexMax = i;
+        dmax = d;
+      }
+    }
+
+    List<Anchor> res = new ArrayList<>();
+    if (dmax > epsilon) {
+      if (points.size() < 2) return res;
+      res.addAll(rdpReduce(points.subList(1, indexMax), epsilon));
+      res.addAll(rdpReduce(points.subList(indexMax, end), epsilon));
+    } else {
+      if (points.size() < 2) return res;
+      res.add(points.get(0));
+      res.add(points.get(end-1));
+    }
+
+    return res;
   }
 
 
