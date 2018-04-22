@@ -16,12 +16,17 @@
 
 package com.google.ar.core.examples.java.helloar;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,6 +40,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Context;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
@@ -137,6 +149,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private boolean drawing = false;
   private ArrayList<Integer> curColorsDrawn = new ArrayList<>();
 
+  private Double longitude = 0.0;
+  private Double latitude = 0.0;
   //Animations for style
   //final Animation pulse = AnimationUtils.loadAnimation(this,R.anim.pulse);
   //final Animation fadein = AnimationUtils.loadAnimation(this,R.anim.fadein);
@@ -150,6 +164,18 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 
 
+
+    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      System.out.println("Permission Granted");
+      Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      latitude = location.getLatitude();
+      longitude = location.getLongitude();
+
+    } else {
+      longitude = 0.0;
+      latitude = 0.0;
+    }
 
     // Set up tap listener.
     tapHelper = new TapHelper(/*context=*/ this);
@@ -794,6 +820,49 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     return newJSONObject;
   }*/
 
+  public void getNearbyGraffiti(android.view.View view) {
+
+
+
+    RequestQueue queue = Volley.newRequestQueue(this);
+    String url ="http://137.146.121.108:8080/_tagit/getGraffiti";
+
+// Request a string response from the provided URL.
+    System.out.println("VOLLEY REQUESTS");
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                // Display the first 500 characters of the response string.
+                System.out.println("RESPONSE IS: "+response);
+              }
+            }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        System.out.println(error);
+      }
+    });
+
+// Add the request to the RequestQueue.
+    queue.add(stringRequest);
+
+    JSONArray anchorJSON = new JSONArray();
+    if(!drawing) {
+      //Get json string of anchors
+
+      //Read in as json
+
+      //Break into anchors using a trackable, notify user it's ready to draw?
+      //Toast message
+
+      //Add to anchors list, or redraw over it*
+
+      //
+    }
+
+    //Set anchor (and anchor matrices?) to new data
+  }
+
   public void uploadDrawing(android.view.View view) {
     System.out.println("Uploading Drawing to server!");
 
@@ -804,7 +873,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     System.out.println("Original: " + anchors.size());
     List<Anchor> reducedAnchors = rdpReduce(anchors, 0.1);
     System.out.println("Reduced: " + reducedAnchors.size());
-
+    anchorJSON.put(latitude);
+    anchorJSON.put(longitude);
     //Convert to json
     for (Anchor singleObject : reducedAnchors) {
       anchorJSON.put(singleObject.getPose());
@@ -845,10 +915,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("POST");
-        //urlConnection.setRequestProperty("Graffiti",data);
         urlConnection.setDoOutput(true);
         urlConnection.setRequestProperty("Accept","application/json");
-        //conn.setDoOutput(true);
         urlConnection.setDoInput(true);
 
         DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
@@ -863,26 +931,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         urlConnection.disconnect();
 
-        //OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-
-        /*writeStream(outputPost);
-        outputPost.flush();
-        outputPost.close();*/
-
-        /*out = new BufferedOutputStream(urlConnection.getOutputStream());
-
-        BufferedWriter writer = new BufferedWriter (new OutputStreamWriter(out, "UTF-8"));
-
-        writer.write(data);
-
-        writer.flush();
-
-        writer.close();
-
-        out.close();
-
-        urlConnection.connect();*/
-
         System.out.println("WE CONNECTED");
 
 
@@ -895,8 +943,12 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
       }
 
+
+
       return urlString;
     }
+
+
   }
 
   public static double distancePtToLine(Anchor p0, Anchor p1, Anchor p2) {

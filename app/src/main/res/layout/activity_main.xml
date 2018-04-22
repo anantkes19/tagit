@@ -110,7 +110,7 @@
         android:layout_height="65dp"
         android:layout_marginBottom="8dp"
         android:elevation="0dp"
-        android:onClick="uploadDrawing"
+        android:onClick="getNearbyGraffiti"
         android:text="@string/upload_graffiti"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
