@@ -163,9 +163,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
 
-   // pulse = AnimationUtils.loadAnimation(this,R.anim.pulse);
-
-
     LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       System.out.println("Permission Granted");
@@ -519,6 +516,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   }
 
 
+  public void animate(android.view.View view){
+    Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+    view.startAnimation(pulse);
+  }
 
   // update drawing index of this.paintColors
   // bound to user button tap
@@ -666,6 +667,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   // delete last 3 points drawn on the screen
   public void undrawLastPoints(android.view.View view) {
+    animate(view);
     for (int i = 1; i < 4; i++) {
       try {
         this.anchors.remove(this.anchors.size() - i);
@@ -677,6 +679,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   //hamburger
   public void helpDialog(android.view.View view) {
+    animate(view);
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle("How to Use");
     if (drawing) {
@@ -694,8 +697,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   }
 
   // enter draw mode
-  public void userStartPaint(ImageButton view) {
-
+  public void userStartPaint(android.view.View view) {
+    animate(view);
     //view.startAnimation(pulse);
     //System.out.println("Colleen lied\n");
     drawing = true;
@@ -717,7 +720,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // Exit draw mode w/ are you sure button
     public void userStopPaint(android.view.View view) {
-        //view.startAnimation(pulse);
+        animate(view);
 
       //build dialog builder, set the title and message
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -735,19 +738,19 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             public void onClick(DialogInterface dialog, int which) {
                 //delete the points
 
-                final ImageButton startPaint = (ImageButton) findViewById(R.id.buttonStartPaint);
+                final View startPaint = findViewById(R.id.buttonStartPaint);
                 startPaint.setVisibility(View.VISIBLE);
 
-                final ImageButton undoButton = (ImageButton) findViewById(R.id.undoButton);
+                final View undoButton = findViewById(R.id.undoButton);
                 undoButton.setVisibility(View.GONE);
 
-                final ImageButton buttonPaintCan = (ImageButton) findViewById(R.id.buttonPaintCan);
+                final View buttonPaintCan = findViewById(R.id.buttonPaintCan);
                 buttonPaintCan.setVisibility(View.GONE);
 
                 final Button uploadButton = (Button) findViewById(R.id.uploadButton);
                 uploadButton.setVisibility(View.GONE);
 
-                final ImageButton backButton = (ImageButton) findViewById(R.id.buttonStopPaint);
+                final View backButton = findViewById(R.id.buttonStopPaint);
                 backButton.setVisibility(View.GONE);
 
                 resetSelectPaint(buttonPaintCan);
@@ -777,7 +780,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // makes color buttons visible
   public void userSelectPaint(android.view.View view) {
 
-    //view.startAnimation(pulse);
+    animate(view);
 
 //    drawing = true; // allow points to be drawn
 
@@ -880,6 +883,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   public void uploadDrawing(android.view.View view) {
     System.out.println("Uploading Drawing to server!");
+    animate(view);
 
     CallAPI dataSender = new CallAPI();
     JSONArray anchorJSON = new JSONArray();

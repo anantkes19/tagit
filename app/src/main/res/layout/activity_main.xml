@@ -59,7 +59,7 @@
         android:layout_alignParentLeft="true" />
 
     //start drawing button
-    <ImageButton
+    <Button
         android:id="@+id/buttonStartPaint"
         android:layout_width="60dp"
         android:layout_height="64dp"
