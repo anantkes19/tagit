@@ -152,7 +152,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   private Double longitude = 0.0;
   private Double latitude = 0.0;
   //Animations for style
-  //final Animation pulse = AnimationUtils.loadAnimation(this,R.anim.pulse);
+  //Animation pulse;
   //final Animation fadein = AnimationUtils.loadAnimation(this,R.anim.fadein);
   //final Animation fadeout = AnimationUtils.loadAnimation(this,R.anim.fadeout);
   @Override
@@ -163,6 +163,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
 
+   // pulse = AnimationUtils.loadAnimation(this,R.anim.pulse);
 
 
     LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -675,12 +676,25 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   }
 
   //hamburger
-  public void hamburger(android.view.View view) {
-    System.out.println("HAMBURGER!!!!!");
+  public void helpDialog(android.view.View view) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("How to Use");
+    if (drawing) {
+      builder.setMessage("After a surface is found, start drawing! To change colors, press "+
+      "the spray can in the bottom right corner. When you are done, press 'Upload Graffiti.' "+
+      "To cancel drawing, press the X in the upper right corner, and to undo, press the arrow in the bottom left.");
+    }
+    else {
+      builder.setMessage("To start drawing, press the spray can in the upper right corner " +
+              "and align with a flat surface until a grid appears.");
+    }
+    builder.setPositiveButton("OK", null);
+    AlertDialog helpDialog = builder.create();
+    helpDialog.show();
   }
 
   // enter draw mode
-  public void userStartPaint(android.view.View view) {
+  public void userStartPaint(ImageButton view) {
 
     //view.startAnimation(pulse);
     //System.out.println("Colleen lied\n");
@@ -711,9 +725,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         builder.setMessage("Are you sure?");
 
         //sets the yes button
-    //view.startAnimation(pulse);
+
     //System.out.println("Colleen told the truth\n");
-    drawing = false;    // prevent points from being drawn
+
 
 
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -737,6 +751,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 backButton.setVisibility(View.GONE);
 
                 resetSelectPaint(buttonPaintCan);
+                drawing = false;    // prevent points from being drawn
 
                 while (anchors.size() != 0) {
                   anchors.get(0).detach();

@@ -46,19 +46,19 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
-    //hamburger menu
+    //help dialog
     <ImageButton
-        android:id="@+id/hamburgerButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/dots"
-        android:onClick="hamburger"
+        android:id="@+id/helpButton"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="24dp"
+        android:background="@drawable/question"
+        android:onClick="helpDialog"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" />
 
     //start drawing button
-
     <ImageButton
         android:id="@+id/buttonStartPaint"
         android:layout_width="60dp"
@@ -67,7 +67,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="11dp"
         android:background="@drawable/spray"
         android:contentDescription="@string/select_paints"
         android:onClick="userStartPaint" />
@@ -76,13 +76,13 @@
     <ImageButton
         android:id="@+id/buttonStopPaint"
         android:visibility="gone"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginStart="8dp"
         android:onClick="userStopPaint"
-        android:background="@drawable/xbutton"
+        android:background="@drawable/xmark"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/select_paints"
@@ -100,7 +100,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:contentDescription="@string/undo_button"
-        android:background="@drawable/undo"/>
+        android:background="@drawable/arrow"/>
 
     //upload button
     <Button
@@ -115,7 +115,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         style = "@style/Widget.AppCompat.Button.Colored"
-        android:backgroundTint="#23a0ff"
+        android:backgroundTint="#d2d2d2"
         />
     <RelativeLayout
         android:id="@+id/RelativeLayout02"
