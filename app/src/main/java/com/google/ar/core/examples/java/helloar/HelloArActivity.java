@@ -137,6 +137,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Temporary matrix allocated here to reduce number of allocations for each frame.
   private final float[] anchorMatrix = new float[16];
 
+  private final float[][] anchorColorMatrix = new float[7][16];
+
+  private final boolean[] hasDrawn = {false, false, false, false, false,false,false};
+
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
@@ -166,7 +170,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       System.out.println("Permission Granted");
-      Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER); //Need to fix this error, it didn't ask last time
       latitude = location.getLatitude();
       longitude = location.getLongitude();
 
@@ -383,7 +387,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // space. This anchor is created on the Plane to place the 3D model
             // in the correct position relative both to the world and to the plane.
             Anchor newAnchor = hit.createAnchor();
-            ancholors.put(newAnchor, 7);  // default entry of 7, 1 greater than
+            hasDrawn[curDrawingIdx] = true;
+            ancholors.put(newAnchor, curDrawingIdx);  // default entry of 7, 1 greater than
             anchors.add(newAnchor);
 
             break;
@@ -448,13 +453,22 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 //      curColorsDrawn.clear();
 
       // Visualize anchors created by touch.
-      float scaleFactor = 0.01f;
+      float scaleFactor = 0.05f;
+
+
+      //For each renderer we do a loop of it's anchors and draw those
+
+      //We are doing each anchor...
+
+
       for (Anchor anchor : anchors) {
         if (anchor.getTrackingState() != TrackingState.TRACKING) {
           continue;
         }
         // Get the current pose of an Anchor in world space. The Anchor pose is updated
         // during calls to session.update() as ARCore refines its estimate of the world.
+        //int colorIdx = ancholors.get(anchor);
+        //anchor.getPose().toMatrix(anchorColorMatrix[curDrawingIdx], 0);
         anchor.getPose().toMatrix(anchorMatrix, 0);
 
         // Update and draw the model and its shadow.
@@ -478,23 +492,21 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     try {
 
-      if (ancholors.get(a) > 6) {  // if the current anchor has not already been drawn with a color
+      /*if (ancholors.get(a) > 6) {  // if the current anchor has not already been drawn with a color
         ancholors.put(a, curDrawingIdx);  // give it the color of the currently drawn object
 
-      }
+      }*/
 
       int colorIdx = ancholors.get(a);
-      curColorsDrawn.add(curDrawingIdx);
+      //curColorsDrawn.add(curDrawingIdx);
 
+      //paintColors[colorIdx].updateModelMatrix(anchorColorMatrix[colorIdx], scaleFactor);
       paintColors[colorIdx].updateModelMatrix(anchorMatrix, scaleFactor);
 
 //       update the anchor points on each object renderer
 //      for (ObjectRenderer virtObj : this.paintColors) {
 //        virtObj.updateModelMatrix(anchorMatrix, scaleFactor);
 //      }
-
-      // loop through anchors
-        // get virt obj from idx (value of k-v anchor pair) and call update model matrix on the current anchor
 
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
@@ -507,11 +519,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 //      for(int i = 0; i < curColorsDrawn.size(); i++) {
 //        paintColors[curColorsDrawn.get(i)].draw(viewmtx, projmtx, colorCorrectionRgba);
 //      }
-//
-      for (ObjectRenderer virtObj : this.paintColors) {
-        virtObj.draw(viewmtx, projmtx, colorCorrectionRgba);
+      for(int i = 0; i < this.paintColors.length; i++) {
+        if(hasDrawn[i]) {
+          this.paintColors[i].draw(viewmtx, projmtx, colorCorrectionRgba);
+        }
       }
-//        this.paintColors[this.curDrawingIdx].draw(viewmtx, projmtx, colorCorrectionRgba);
+      /*for (ObjectRenderer virtObj : this.paintColors) {
+
+        virtObj.draw(viewmtx, projmtx, colorCorrectionRgba);
+      }*/
+
+
     }
   }
 
@@ -759,7 +777,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 while (anchors.size() != 0) {
                   anchors.get(0).detach();
                   anchors.remove(0);
+
                 }
+                for(int i = 0; i < anchorMatrix.length; i++ ) {
+                  anchorMatrix[i] = 0;
+                }
+
+
+
                 dialog.dismiss();
             }
         });
