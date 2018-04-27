@@ -117,7 +117,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
 
-
+  private boolean firstPlane = false;
   // 7 Primary Paint Colors
   private final ObjectRenderer purpleCircle = new ObjectRenderer();
   private final ObjectRenderer yellowCircle = new ObjectRenderer();
@@ -139,7 +139,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   private final float[][] anchorColorMatrix = new float[7][16];
 
-  private final boolean[] hasDrawn = {false, false, false, false, false,false,false};
+  //private final boolean[] hasDrawn = {false, false, false, false, false,false,false};
 
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
@@ -239,7 +239,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       }
 
       if (message != null) {
-        messageSnackbarHelper.showError(this, message);
         Log.e(TAG, "Exception creating session", exception);
         return;
       }
@@ -379,7 +378,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
             // Cap the number of objects created. This avoids overloading both the
             // rendering system and ARCore.
-            if (anchors.size() >= 200) {
+            if (anchors.size() >= 600) {
               anchors.get(0).detach();
               anchors.remove(0);
             }
@@ -387,8 +386,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // space. This anchor is created on the Plane to place the 3D model
             // in the correct position relative both to the world and to the plane.
             Anchor newAnchor = hit.createAnchor();
-            hasDrawn[curDrawingIdx] = true;
-            ancholors.put(newAnchor, curDrawingIdx);  // default entry of 7, 1 greater than
+            //hasDrawn[curDrawingIdx] = true;
+            ancholors.put(newAnchor, curDrawingIdx);
+
             anchors.add(newAnchor);
 
             break;
@@ -428,22 +428,25 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       pointCloud.release();
 
       // Check if we detected at least one plane. If so, hide the loading message.
-      if (messageSnackbarHelper.isShowing()) {
-        for (Plane plane : session.getAllTrackables(Plane.class)) {
-          if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
-              && plane.getTrackingState() == TrackingState.TRACKING) {
 
-            // haptic feedback when a new plane is found
-            // Get instance of Vibrator from current Context
-//            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+      for (Plane plane : session.getAllTrackables(Plane.class)) {
+        if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
+            && plane.getTrackingState() == TrackingState.TRACKING) {
+
+          // haptic feedback when a new plane is found
+          // Get instance of Vibrator from current Context
+          if(!firstPlane) {
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 400 milliseconds
-//            v.vibrate(400);
-
-            messageSnackbarHelper.hide(this);
-            break;
+            v.vibrate(400);
+            firstPlane = true;
           }
+
+          messageSnackbarHelper.hide(this);
+          break;
         }
       }
+
 
       // Visualize planes.
       planeRenderer.drawPlanes(
@@ -468,8 +471,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         // Get the current pose of an Anchor in world space. The Anchor pose is updated
         // during calls to session.update() as ARCore refines its estimate of the world.
         //int colorIdx = ancholors.get(anchor);
+
+
+
         //anchor.getPose().toMatrix(anchorColorMatrix[curDrawingIdx], 0);
         anchor.getPose().toMatrix(anchorMatrix, 0);
+
+        //Colleen Todo: Check if we can do a for loop and store a bunch of anchor matrices while looping over anchors.
+        //Todo: and after the looping then we draw the updated matrices. as in updateModelMatrices.
+
+        /* Todo: The issue is for each anchor we redraw every cube, that seems overkill */
+
 
         // Update and draw the model and its shadow.
         this.updateModelMatrices(anchor, scaleFactor, projmtx, viewmtx, colorCorrectionRgba);
@@ -492,21 +504,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     try {
 
-      /*if (ancholors.get(a) > 6) {  // if the current anchor has not already been drawn with a color
-        ancholors.put(a, curDrawingIdx);  // give it the color of the currently drawn object
-
-      }*/
-
       int colorIdx = ancholors.get(a);
       //curColorsDrawn.add(curDrawingIdx);
 
       //paintColors[colorIdx].updateModelMatrix(anchorColorMatrix[colorIdx], scaleFactor);
       paintColors[colorIdx].updateModelMatrix(anchorMatrix, scaleFactor);
-
-//       update the anchor points on each object renderer
-//      for (ObjectRenderer virtObj : this.paintColors) {
-//        virtObj.updateModelMatrix(anchorMatrix, scaleFactor);
-//      }
 
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
@@ -520,16 +522,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 //        paintColors[curColorsDrawn.get(i)].draw(viewmtx, projmtx, colorCorrectionRgba);
 //      }
       for(int i = 0; i < this.paintColors.length; i++) {
-        if(hasDrawn[i]) {
+        if(ancholors.get(a) == i) {
           this.paintColors[i].draw(viewmtx, projmtx, colorCorrectionRgba);
         }
       }
-      /*for (ObjectRenderer virtObj : this.paintColors) {
-
-        virtObj.draw(viewmtx, projmtx, colorCorrectionRgba);
-      }*/
-
-
     }
   }
 
@@ -688,7 +684,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     animate(view);
     for (int i = 1; i < 4; i++) {
       try {
-        this.anchors.remove(this.anchors.size() - i);
+        Anchor tempAnchor = this.anchors.remove(this.anchors.size() - 1);
+        ancholors.remove(tempAnchor);
       } catch (IndexOutOfBoundsException e) {
           Log.e(TAG, "Index out of bounds: ", e);
       }
@@ -782,6 +779,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 for(int i = 0; i < anchorMatrix.length; i++ ) {
                   anchorMatrix[i] = 0;
                 }
+                ancholors.clear();
 
 
 

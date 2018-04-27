@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
@@ -49,18 +49,20 @@
       <file leaf-file-name="HelloArActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/google/ar/core/examples/java/helloar/HelloArActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6375">
-              <caret line="389" column="43" lean-forward="false" selection-start-line="389" selection-start-column="43" selection-end-line="389" selection-end-column="43" />
+            <state relative-caret-position="315">
+              <caret line="380" column="35" lean-forward="false" selection-start-line="380" selection-start-column="35" selection-end-line="380" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#26317#27601#0" expanded="true" />
-                <element signature="e#27600#27601#0" expanded="true" />
-                <element signature="e#27673#27861#0" expanded="true" />
-                <element signature="e#27860#27861#0" expanded="true" />
-                <element signature="e#30578#30859#0" expanded="true" />
-                <element signature="e#30858#30859#0" expanded="true" />
-                <element signature="e#30861#31011#0" expanded="true" />
-                <element signature="e#31010#31011#0" expanded="true" />
+                <element signature="e#26114#27433#0" expanded="true" />
+                <element signature="e#27432#27433#0" expanded="true" />
+                <element signature="e#27505#27693#0" expanded="true" />
+                <element signature="e#27692#27693#0" expanded="true" />
+                <element signature="e#30410#30691#0" expanded="true" />
+                <element signature="e#30690#30691#0" expanded="true" />
+                <element signature="e#30693#30843#0" expanded="true" />
+                <element signature="e#30842#30843#0" expanded="true" />
+                <element signature="e#32417#32418#0" expanded="true" />
+                <element signature="e#32451#32452#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -121,11 +123,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>m</find>
-      <find>max</find>
-      <find>tapHelper</find>
-      <find>shadow</find>
-      <find>scale</find>
       <find>virtualObject</find>
       <find>b</find>
       <find>bybsn</find>
@@ -144,13 +141,18 @@
       <find>curColorsDrawn</find>
       <find>paintColors</find>
       <find>draw</find>
-      <find>anchorMatrix</find>
-      <find>ancholors</find>
       <find>yellow</find>
       <find>curDrawingIdx</find>
       <find>anchorColorMatrix</find>
       <find>anchor</find>
       <find>hit</find>
+      <find>undo</find>
+      <find>undoButton</find>
+      <find>ancholors</find>
+      <find>hasDrawn</find>
+      <find>anchorMatrix</find>
+      <find>vibra</find>
+      <find>messageSnackbarHelper</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -2159,9 +2161,10 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="device.picker.selection" value="988861355838575557" />
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1524794116979" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1524798298961" />
     <property name="sync.plugin.last.upgrade.timestamp" value="1524787709668" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/bybsn/Desktop/tagit/app/src/main/java/com/google/ar/core/examples/java/common/rendering/ObjectRenderer.java" />
+    <property name="android.profiler.active" value="true" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -2488,26 +2491,34 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="2576" height="1410" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19701727" sideWeight="0.46025437" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33523375" sideWeight="0.8254565" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32915717" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33516484" sideWeight="0.8254565" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3288854" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14835165" sideWeight="0.49785176" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31318682" sideWeight="0.49785176" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10651828" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19701727" sideWeight="0.5397456" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19701727" sideWeight="0.5397456" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294714" sideWeight="0.497153" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2597,14 +2608,16 @@
           <caret line="270" column="50" lean-forward="true" selection-start-line="270" selection-start-column="50" selection-end-line="270" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#26317#27601#0" expanded="true" />
-            <element signature="e#27600#27601#0" expanded="true" />
-            <element signature="e#27673#27861#0" expanded="true" />
-            <element signature="e#27860#27861#0" expanded="true" />
-            <element signature="e#30578#30859#0" expanded="true" />
-            <element signature="e#30858#30859#0" expanded="true" />
-            <element signature="e#30861#31011#0" expanded="true" />
-            <element signature="e#31010#31011#0" expanded="true" />
+            <element signature="e#26114#27433#0" expanded="true" />
+            <element signature="e#27432#27433#0" expanded="true" />
+            <element signature="e#27505#27693#0" expanded="true" />
+            <element signature="e#27692#27693#0" expanded="true" />
+            <element signature="e#30410#30691#0" expanded="true" />
+            <element signature="e#30690#30691#0" expanded="true" />
+            <element signature="e#30693#30843#0" expanded="true" />
+            <element signature="e#30842#30843#0" expanded="true" />
+            <element signature="e#32417#32418#0" expanded="true" />
+            <element signature="e#32451#32452#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2827,18 +2840,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/google/ar/core/examples/java/helloar/HelloArActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6375">
-          <caret line="389" column="43" lean-forward="false" selection-start-line="389" selection-start-column="43" selection-end-line="389" selection-end-column="43" />
+        <state relative-caret-position="315">
+          <caret line="380" column="35" lean-forward="false" selection-start-line="380" selection-start-column="35" selection-end-line="380" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#26317#27601#0" expanded="true" />
-            <element signature="e#27600#27601#0" expanded="true" />
-            <element signature="e#27673#27861#0" expanded="true" />
-            <element signature="e#27860#27861#0" expanded="true" />
-            <element signature="e#30578#30859#0" expanded="true" />
-            <element signature="e#30858#30859#0" expanded="true" />
-            <element signature="e#30861#31011#0" expanded="true" />
-            <element signature="e#31010#31011#0" expanded="true" />
+            <element signature="e#26114#27433#0" expanded="true" />
+            <element signature="e#27432#27433#0" expanded="true" />
+            <element signature="e#27505#27693#0" expanded="true" />
+            <element signature="e#27692#27693#0" expanded="true" />
+            <element signature="e#30410#30691#0" expanded="true" />
+            <element signature="e#30690#30691#0" expanded="true" />
+            <element signature="e#30693#30843#0" expanded="true" />
+            <element signature="e#30842#30843#0" expanded="true" />
+            <element signature="e#32417#32418#0" expanded="true" />
+            <element signature="e#32451#32452#0" expanded="true" />
           </folding>
         </state>
       </provider>
