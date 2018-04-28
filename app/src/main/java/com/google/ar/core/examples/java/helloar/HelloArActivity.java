@@ -77,6 +77,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
@@ -91,6 +92,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -144,6 +147,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   // Anchors created from taps used for object placing.
   private final ArrayList<Anchor> anchors = new ArrayList<>();
 
+  private JSONArray nearbyObjects;
+
   private Map<Anchor,Integer> ancholors = new HashMap<>();
 
   private String[] curModel = {"models/purpleSquare.png", "models/yellowSquare.png", "models/cyanSquare.png",
@@ -151,6 +156,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
   private int curDrawingIdx = 1;
   private boolean drawing = false;
+  private boolean nearbyDrawn = false;
+  private boolean nearbyLoaded = false;
   private ArrayList<Integer> curColorsDrawn = new ArrayList<>();
 
   private Double longitude = 0.0;
@@ -361,12 +368,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       // compared to frame rate.
 
       MotionEvent tap = tapHelper.poll();
-      if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
+
+      if (tap != null && camera.getTrackingState() == TrackingState.TRACKING && drawing) {
         for (HitResult hit : frame.hitTest(tap)) {
           // Check if any plane was hit, and if it was hit inside the plane polygon
           Trackable trackable = hit.getTrackable();
-          System.out.println("Location getDist() : " + hit.getDistance() );
-          System.out.println("Location getPos() : " + hit.getHitPose() );
+
+          //System.out.println("Location getDist() : " + hit.getDistance() );
+          // System.out.println("Location getPos() : " + hit.getHitPose() );
 
           // haptic feedback
 
@@ -386,6 +395,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // space. This anchor is created on the Plane to place the 3D model
             // in the correct position relative both to the world and to the plane.
             Anchor newAnchor = hit.createAnchor();
+            
             //hasDrawn[curDrawingIdx] = true;
             ancholors.put(newAnchor, curDrawingIdx);
 
@@ -430,9 +440,45 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       // Check if we detected at least one plane. If so, hide the loading message.
 
       for (Plane plane : session.getAllTrackables(Plane.class)) {
+
+
+
         if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
             && plane.getTrackingState() == TrackingState.TRACKING) {
 
+          if(!nearbyDrawn && nearbyLoaded) {
+            nearbyDrawn = true;
+            //Feed in all nearby anchors here, adding to ancholor, anchors
+
+            Anchor newAnchor;
+            System.out.println("JSON STUFF");
+            //Pattern pattern = Pattern.compile("[-]{0,1}[\\d]*[\\.]\\d+");
+            Pattern pattern = Pattern.compile("[^-0-9.]+");
+            for(int i = 2; i < nearbyObjects.length(); i++){
+              System.out.println(nearbyObjects.getString(i));
+              String poseString = nearbyObjects.getString(i);
+              //Matcher match = pattern.matcher(poseString);
+              String[] poseArray = pattern.split(poseString);  //Test out what this gives
+
+              for(String element : poseArray){
+
+                System.out.println("element = " + element);
+              }
+              float[] posePos = {Float.parseFloat(poseArray[1]), Float.parseFloat(poseArray[2]), Float.parseFloat(poseArray[3])};
+              float[] poseOrientation = {Float.parseFloat(poseArray[4]), Float.parseFloat(poseArray[5]), Float.parseFloat(poseArray[6]),Float.parseFloat(poseArray[7])};
+              Pose newPose = new Pose(posePos, poseOrientation);
+              newAnchor = plane.createAnchor(newPose);
+              //objectList.add(jsonObject);
+              ancholors.put(newAnchor, 2);
+
+              anchors.add(newAnchor);
+            }
+
+
+            //hasDrawn[curDrawingIdx] = true;
+
+
+          }
           // haptic feedback when a new plane is found
           // Get instance of Vibrator from current Context
           if(!firstPlane) {
@@ -477,7 +523,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         //anchor.getPose().toMatrix(anchorColorMatrix[curDrawingIdx], 0);
         anchor.getPose().toMatrix(anchorMatrix, 0);
 
-        //Colleen Todo: Check if we can do a for loop and store a bunch of anchor matrices while looping over anchors.
+        //Todo: Check if we can do a for loop and store a bunch of anchor matrices while looping over anchors.
         //Todo: and after the looping then we draw the updated matrices. as in updateModelMatrices.
 
         /* Todo: The issue is for each anchor we redraw every cube, that seems overkill */
@@ -866,7 +912,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 
     RequestQueue queue = Volley.newRequestQueue(this);
-    String url ="http://137.146.121.108:8080/_tagit/getGraffiti";
+    String url ="http://137.146.157.242:8080/_tagit/getGraffiti";
 
 // Request a string response from the provided URL.
     System.out.println("VOLLEY REQUESTS");
@@ -876,10 +922,20 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
               public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
                 System.out.println("RESPONSE IS: "+response);
+
+                try {
+                  nearbyObjects = new JSONArray(response);
+                  nearbyLoaded = true;
+
+
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
               }
             }, new Response.ErrorListener() {
       @Override
       public void onErrorResponse(VolleyError error) {
+        System.out.println("ERROR, DID NOT GET RESPONSE");
         System.out.println(error);
       }
     });
@@ -918,15 +974,15 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     anchorJSON.put(latitude);
     anchorJSON.put(longitude);
     //Convert to json
-    for (Anchor singleObject : reducedAnchors) {
-      anchorJSON.put(singleObject.getPose());
+    for (Anchor singleObject : anchors) { //Change to reduced anchors to save space
+      anchorJSON.put(singleObject.getPose().toString());
     }
 
     //reducedAnchors.forEach(singleObject -> anchorJSON.put(singleObject.getPose())); RIP Android studio old java
 
     String jsonString = anchorJSON.toString();
     //Send points
-    dataSender.execute("http://137.146.121.108:8080/_tagit/sendGraffiti",jsonString);
+    dataSender.execute("http://137.146.157.242:8080/_tagit/sendGraffiti",jsonString);
             //.doInBackground("https://hackcolbyclan.appspot.com/_tagit/sendGraffiti",jsonString);
   }
 
