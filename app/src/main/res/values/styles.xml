@@ -32,4 +32,15 @@
     <!-- All customizations that are NOT specific to a particular API-level can go here. -->
   </style>
 
+  <style name="helpDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <!--buttons color-->
+    <item name="colorAccent">#F0752B</item>
+    <item name="android:paddingTop">3dp</item>
+    <!--title and message color-->
+    <item name="android:textColorPrimary">@android:color/white</item>
+    <!--dialog background-->
+    <item name="android:background">#555555</item>
+
+  </style>
+
 </resources>

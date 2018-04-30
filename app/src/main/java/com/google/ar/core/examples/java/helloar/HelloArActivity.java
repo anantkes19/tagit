@@ -36,6 +36,7 @@ import android.media.MediaPlayer;
 import android.view.HapticFeedbackConstants;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -168,6 +169,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   //final Animation fadeout = AnimationUtils.loadAnimation(this,R.anim.fadeout);
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     surfaceView = (GLSurfaceView) findViewById(R.id.surfaceview);
@@ -185,6 +188,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       longitude = 0.0;
       latitude = 0.0;
     }
+
+    getNearbyGraffiti();
 
     // Set up tap listener.
     tapHelper = new TapHelper(/*context=*/ this);
@@ -328,7 +333,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
       for (int i = 0; i<this.paintColors.length; i++) {
 
         this.paintColors[i].createOnGlThread(/*context=*/ this, "models/square.obj",this.curModel[i]);
-//        this.paintColors[i].createOnGlThread(/*context=*/ this, this.curModel[0][0], this.curModel[0][1]);
         this.paintColors[i].setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
 
       }
@@ -377,8 +381,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
           //System.out.println("Location getDist() : " + hit.getDistance() );
           // System.out.println("Location getPos() : " + hit.getHitPose() );
 
-          // haptic feedback
-
           // Creates an anchor if a plane or an oriented point was hit.
           if ((trackable instanceof Plane && ((Plane) trackable).isPoseInPolygon(hit.getHitPose()))
               || (trackable instanceof Point
@@ -395,8 +397,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // space. This anchor is created on the Plane to place the 3D model
             // in the correct position relative both to the world and to the plane.
             Anchor newAnchor = hit.createAnchor();
-            
-            //hasDrawn[curDrawingIdx] = true;
+
             ancholors.put(newAnchor, curDrawingIdx);
 
             anchors.add(newAnchor);
@@ -446,18 +447,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
             && plane.getTrackingState() == TrackingState.TRACKING) {
 
-          if(!nearbyDrawn && nearbyLoaded) {
+          if(!nearbyDrawn && nearbyLoaded && !drawing) {
             nearbyDrawn = true;
             //Feed in all nearby anchors here, adding to ancholor, anchors
 
             Anchor newAnchor;
-            System.out.println("JSON STUFF");
-            //Pattern pattern = Pattern.compile("[-]{0,1}[\\d]*[\\.]\\d+");
+
             Pattern pattern = Pattern.compile("[^-0-9.]+");
             for(int i = 2; i < nearbyObjects.length(); i++){
-              System.out.println(nearbyObjects.getString(i));
+
               String poseString = nearbyObjects.getString(i);
-              //Matcher match = pattern.matcher(poseString);
+
               String[] poseArray = pattern.split(poseString);  //Test out what this gives
 
               for(String element : poseArray){
@@ -468,15 +468,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
               float[] poseOrientation = {Float.parseFloat(poseArray[4]), Float.parseFloat(poseArray[5]), Float.parseFloat(poseArray[6]),Float.parseFloat(poseArray[7])};
               Pose newPose = new Pose(posePos, poseOrientation);
               newAnchor = plane.createAnchor(newPose);
-              //objectList.add(jsonObject);
+
               ancholors.put(newAnchor, 2);
 
               anchors.add(newAnchor);
             }
-
-
-            //hasDrawn[curDrawingIdx] = true;
-
 
           }
           // haptic feedback when a new plane is found
@@ -534,10 +530,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
       }
 
-//      if (drawing) {
-//        draw(scaleFactor, projmtx, viewmtx, colorCorrectionRgba);
-//      }
-
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
       Log.e(TAG, "Exception on the OpenGL thread", t);
@@ -562,15 +554,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     }
 
     // draw anchor points using user's currently selected color
-    if (drawing) {
-//
-//      for(int i = 0; i < curColorsDrawn.size(); i++) {
-//        paintColors[curColorsDrawn.get(i)].draw(viewmtx, projmtx, colorCorrectionRgba);
-//      }
-      for(int i = 0; i < this.paintColors.length; i++) {
-        if(ancholors.get(a) == i) {
-          this.paintColors[i].draw(viewmtx, projmtx, colorCorrectionRgba);
-        }
+    for(int i = 0; i < this.paintColors.length; i++) {
+      if(ancholors.get(a) == i) {
+        this.paintColors[i].draw(viewmtx, projmtx, colorCorrectionRgba);
       }
     }
   }
@@ -597,7 +583,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_purple);
+    //btn.setBackgroundResource(R.drawable.spray_purple);
+    btn.animate().rotation(60);
   }
 
 
@@ -617,7 +604,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_yellow);
+    //btn.setBackgroundResource(R.drawable.spray_yellow);
+    btn.animate().rotation(300);
   }
 
 
@@ -636,7 +624,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_cyan);
+    //btn.setBackgroundResource(R.drawable.spray_cyan);
+    btn.animate().rotation(180);
   }
 
 
@@ -655,7 +644,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_blue);
+    //btn.setBackgroundResource(R.drawable.spray_blue);
+    btn.animate().rotation(120);
   }
 
 
@@ -674,7 +664,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_green);
+    //btn.setBackgroundResource(R.drawable.spray_green);
+    btn.animate().rotation(240);
   }
 
 
@@ -694,7 +685,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_red);
+    //btn.setBackgroundResource(R.drawable.spray_red);
+
+    btn.animate().rotation(0);
 
   }
 
@@ -715,7 +708,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     // change spray can image to current color
     ImageButton btn = (ImageButton)findViewById(R.id.buttonPaintCan);
-    btn.setBackgroundResource(R.drawable.spray_black);
+    //btn.setBackgroundResource(R.drawable.spray_black);
   }
 
 
@@ -741,7 +734,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   //hamburger
   public void helpDialog(android.view.View view) {
     animate(view);
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.helpDialog);
     builder.setTitle("How to Use");
     if (drawing) {
       builder.setMessage("After a surface is found, start drawing! To change colors, press "+
@@ -750,7 +743,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     }
     else {
       builder.setMessage("To start drawing, press the spray can in the upper right corner " +
-              "and align with a flat surface until a grid appears.");
+              "and align with a flat surface until a grid appears. You can view other people's drawings by looking around!");
     }
     builder.setPositiveButton("OK", null);
     AlertDialog helpDialog = builder.create();
@@ -761,7 +754,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   public void userStartPaint(android.view.View view) {
     animate(view);
     //view.startAnimation(pulse);
-    //System.out.println("Colleen lied\n");
+
+    while (anchors.size() != 0) {
+      anchors.get(0).detach();
+      anchors.remove(0);
+    }
+
+    for(int i = 0; i < anchorMatrix.length; i++ ) {
+      anchorMatrix[i] = 0;
+    }
+    ancholors.clear();
+
     drawing = true;
     view.setVisibility(View.GONE);
 
@@ -784,14 +787,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         animate(view);
 
       //build dialog builder, set the title and message
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.helpDialog);
         builder.setTitle("Confirm");
         builder.setMessage("Are you sure?");
-
-        //sets the yes button
-
-    //System.out.println("Colleen told the truth\n");
-
 
 
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -851,26 +849,31 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     animate(view);
 
-//    drawing = true; // allow points to be drawn
-
     final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
+
+    //Here we check if the menu is already displaying by checking if the red button is visible
+    if(redButton.getVisibility() == View.VISIBLE) {
+      resetSelectPaint(view);
+      return;
+    }
+
     redButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
     blueButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
     blackButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
     yellowButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
     cyanButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
     purpleButton.setVisibility(View.VISIBLE);
-//
+
     final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
     greenButton.setVisibility(View.VISIBLE);
 
@@ -882,35 +885,27 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     final ImageButton redButton = (ImageButton) findViewById(R.id.buttonRed);
     redButton.setVisibility(View.GONE);
-//
+
     final ImageButton blueButton = (ImageButton) findViewById(R.id.buttonBlue);
     blueButton.setVisibility(View.GONE);
-//
+
     final ImageButton blackButton = (ImageButton) findViewById(R.id.buttonBlack);
     blackButton.setVisibility(View.GONE);
-//
+
     final ImageButton yellowButton = (ImageButton) findViewById(R.id.buttonYellow);
     yellowButton.setVisibility(View.GONE);
-//
+
     final ImageButton cyanButton = (ImageButton) findViewById(R.id.buttonCyan);
     cyanButton.setVisibility(View.GONE);
-//
+
     final ImageButton purpleButton = (ImageButton) findViewById(R.id.buttonPurple);
     purpleButton.setVisibility(View.GONE);
-//
+
     final ImageButton greenButton = (ImageButton) findViewById(R.id.buttonGreen);
     greenButton.setVisibility(View.GONE);
   }
-/*
-  public JSONObject getJSONObject(Pose pose) {
-    JSONObject newJSONObject
-    return newJSONObject;
-  }*/
 
-  public void getNearbyGraffiti(android.view.View view) {
-
-
-
+  public void getNearbyGraffiti() {
     RequestQueue queue = Volley.newRequestQueue(this);
     String url ="http://137.146.157.242:8080/_tagit/getGraffiti";
 
@@ -942,22 +937,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 // Add the request to the RequestQueue.
     queue.add(stringRequest);
-
-    JSONArray anchorJSON = new JSONArray();
-    if(!drawing) {
-      //Get json string of anchors
-
-      //Read in as json
-
-      //Break into anchors using a trackable, notify user it's ready to draw?
-      //Toast message
-
-      //Add to anchors list, or redraw over it*
-
-      //
-    }
-
-    //Set anchor (and anchor matrices?) to new data
   }
 
   public void uploadDrawing(android.view.View view) {
@@ -983,7 +962,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     String jsonString = anchorJSON.toString();
     //Send points
     dataSender.execute("http://137.146.157.242:8080/_tagit/sendGraffiti",jsonString);
-            //.doInBackground("https://hackcolbyclan.appspot.com/_tagit/sendGraffiti",jsonString);
   }
 
   public class CallAPI extends AsyncTask<String, String, String> {
@@ -1033,10 +1011,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 
       } catch (Exception e) {
-        System.out.println("Error occured in Sending Data");
-        System.out.println(e.getMessage());
         e.printStackTrace();
-        System.out.println(e.getClass());
 
 
       }
@@ -1050,6 +1025,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
   }
 
   public static double distancePtToLine(Anchor p0, Anchor p1, Anchor p2) {
+    //Writing our own distance equation in 3d space
     double x0 = p0.getPose().tx();
     double y0 = p0.getPose().ty();
     double z0 = p0.getPose().tz();
